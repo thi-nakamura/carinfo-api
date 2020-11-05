@@ -7,7 +7,7 @@ const express = require("express");
 const app = express();
 
 // xml 型式類別検索API
-app.get('/api/syb.jsp', (req, res) => {
+app.get('/api/catalogmaster.jsp', (req, res) => {
   
   // URLパラメータ取得
   var param_user_key       = req.query.user_key;
@@ -26,35 +26,35 @@ app.get('/api/syb.jsp', (req, res) => {
       res.send(error_500);
       return;
   }
-  else if (param_user_key != "123456")
+  else if (param_katasikisitei == "1")
   {
       // error
       // ユーザーキーが合わないケース
       res.send(error_401);
       return;
   }
-  else if (param_user_key == "123457")
+  else if (param_katasikisitei == "2")
   {
       // error
       // 呼び出し側IPアドレスが合わないケース
       res.send(error_403);
       return;
   }
-  else if (param_katasikisitei == "10906")
+  else if (param_katasikisitei == "3")
   {
       // error
       // 型式指定、類別番号が不正のケース
       res.send(error_412);
       return;
   }
-  else if (param_katasikisitei == "10907")
+  else if (param_katasikisitei == "4")
   {
       // error
       // その他のエラーのケース
       res.send(error_500);
       return;
   }
-  else if (param_katasikisitei == "10909")
+  else if (param_katasikisitei == "10")
   {
       // status ok 0件
       res.send(ok_200_0record);
@@ -66,6 +66,10 @@ app.get('/api/syb.jsp', (req, res) => {
       res.send(ok_200_2record);
       return;
   }
+  // status ok 2件以外の項目は実際にどのような内容で返ってくるかは分からない
+  // 項目<status>の内容で正常(200)かエラー(200以外)かを判断し、
+  // 正常(200)の場合、<car_basic_information_total value="n" />の n値が0以下であれば
+  // 該当データ無しという判断をする
 });
 
 // ポート3000でサーバを立てる
@@ -73,12 +77,12 @@ app.listen(3000, () => console.log('Listening on port 3000'));
 
 const ok_200_2record = 
     '<?xml version="1.0" encoding="UTF-8"?>'
-      + '<car_basic_information_info version="1.00">'
+      + '<catalogmaster version="1.00">'
         + '<status>200</status>'
         + '<car_basic_information_total value="2" />'
           + '<car_basic_information no="1">'
             + '<country>日本</country>'
-            + '<maker>"ﾎﾝﾀﾞ"</maker>'
+            + '<maker>ﾎﾝﾀﾞ</maker>'
             + '<keitou>2代目（UA4/5系）</keitou>'
             + '<car_name>ｾｲﾊﾞｰ</car_name>'
             + '<grade_name>ﾋｮｳｼﾞｭﾝ</grade_name>'
@@ -95,7 +99,7 @@ const ok_200_2record =
           + '</car_basic_information>'
           + '<car_basic_information no="2">'
             + '<country>日本</country>'
-            + '<maker>"ﾎﾝﾀﾞ"</maker>'
+            + '<maker>ﾎﾝﾀﾞ</maker>'
             + '<keitou>2代目（UA4/5系）</keitou>'
             + '<car_name>ｲﾝｽﾊﾟｲｱ</car_name>'
             + '<grade_name>ﾋｮｳｼﾞｭﾝ</grade_name>'
@@ -110,13 +114,13 @@ const ok_200_2record =
                 + '<handle_position>R</handle_position>'
               + '</individual_items>'
           + '</car_basic_information>'
-      + '</car_basic_information_info>'
+      + '</catalogmaster>'
   ;
 // ok_200_2record ここまで
 
 const ok_200_0record =
       '<?xml version="1.0" encoding="UTF-8"?>'
-      + '<car_basic_information_info version="1.00">'
+      + '<catalogmaster version="1.00">'
         + '<status>200</status>'
         + '<car_basic_information_total value="0" />'
           + '<car_basic_information no="0">'
@@ -136,13 +140,13 @@ const ok_200_0record =
                 + '<handle_position></handle_position>'
               + '</individual_items>'
           + '</car_basic_information>'
-      + '</car_basic_information_info>'
+      + '</catalogmaster>'
   ;
 // ok_200_0record ここまで
 
 const error_401 =
       '<?xml version="1.0" encoding="UTF-8"?>'
-      + '<car_basic_information_info version="1.00">'
+      + '<catalogmaster version="1.00">'
         + '<status>401</status>'
         + '<car_basic_information_total value="0" />'
           + '<car_basic_information no="0">'
@@ -162,13 +166,13 @@ const error_401 =
                 + '<handle_position></handle_position>'
               + '</individual_items>'
           + '</car_basic_information>'
-      + '</car_basic_information_info>'
+      + '</catalogmaster>'
   ;
 // error_401 ここまで
 
 const error_403 =
       '<?xml version="1.0" encoding="UTF-8"?>'
-      + '<car_basic_information_info version="1.00">'
+      + '<catalogmaster version="1.00">'
         + '<status>403</status>'
         + '<car_basic_information_total value="0" />'
           + '<car_basic_information no="0">'
@@ -188,13 +192,13 @@ const error_403 =
                 + '<handle_position></handle_position>'
               + '</individual_items>'
           + '</car_basic_information>'
-      + '</car_basic_information_info>'
+      + '</catalogmaster>'
   ;
 // error_403 ここまで
 
 const error_412 =
       '<?xml version="1.0" encoding="UTF-8"?>'
-      + '<car_basic_information_info version="1.00">'
+      + '<catalogmaster version="1.00">'
         + '<status>412</status>'
         + '<car_basic_information_total value="0" />'
           + '<car_basic_information no="0">'
@@ -214,13 +218,13 @@ const error_412 =
                 + '<handle_position></handle_position>'
               + '</individual_items>'
           + '</car_basic_information>'
-      + '</car_basic_information_info>'
+      + '</catalogmaster>'
   ;
 // error_412 ここまで
 
 const error_500 =
       '<?xml version="1.0" encoding="UTF-8"?>'
-      + '<car_basic_information_info version="1.00">'
+      + '<catalogmaster version="1.00">'
         + '<status>500</status>'
         + '<car_basic_information_total value="0" />'
           + '<car_basic_information no="0">'
@@ -240,7 +244,7 @@ const error_500 =
                 + '<handle_position></handle_position>'
               + '</individual_items>'
           + '</car_basic_information>'
-      + '</car_basic_information_info>'
+      + '</catalogmaster>'
   ;
 // error_500 ここまで
 
