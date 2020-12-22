@@ -6,7 +6,7 @@
 const express = require("express");
 const app = express();
 
-// xml 型式類別検索API
+// xml 型式類別検索API v1
 app.get('/api/catalogmaster.jsp', (req, res) => {
   
   // URLパラメータ取得
